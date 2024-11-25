@@ -61,9 +61,9 @@ python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsampl
 
 Please see detailed usage by typing `python NextVpower.py -h` or in [source code](NextVpower.py)
 
->Example data was published in Langjun Tang, Zhenyu Guo, Xiaoyi Lu, Junqiao Zhao, Yonghong Li, Kun Yang,
+>Example data was published in [Langjun Tang, Zhenyu Guo, Xiaoyi Lu, Junqiao Zhao, Yonghong Li, Kun Yang,
 Wastewater multiplex PCR amplicon sequencing revealed community transmission of SARS-CoV-2 lineages during the outbreak of infection in Chinese Mainland,
-*Heliyon*, Volume 10, Issue 15, 2024, e35332. DOI: [https://doi.org/10.1016/j.heliyon.2024.e35332](https://doi.org/10.1016/j.heliyon.2024.e35332)
+*Heliyon*, Volume 10, Issue 15, 2024, e35332.](https://doi.org/10.1016/j.heliyon.2024.e35332)
 
 
 Publications
