@@ -37,60 +37,7 @@ python NextVpower.py -h
 
 Usage: 
 ---------------
-NextVpower.py -i INPUT [-o OUTPUT] [-b BARCODE] [-l LINEAGES] [-r MINRATE] [-m] [-v] [-d MINDEPTH]
-              [-a ANNFILE] [--barfilter2] [--k_lineages K_LINEAGES] [--n_sites N_SITES]
-              [--ann_outpath ANN_OUTPATH] [--vcsample VCSAMPLE] [--fsample FSAMPLE] [--fbarcode FBARCODE]
-              [--potentials POTENTIALS] [-h] [--version]
 
-#options:
-  -h, --help            show this help message and exit
-  
-  --version             show program's version number and exit
-
-#Demixing arguments for the demix solver:
-
-  -i INPUT, --input INPUT	[File/Dir] path of input sample table file or vcfs folder
-  
-  -o OUTPUT, --output OUTPUT	[File] path of output table file (default: ./demix_result.tsv)
-  
-  -b BARCODE, --barcode BARCODE	[File] specify a usher_barcodes.csv as input barcode matrix (default: ./usher_barcodes.csv)
-  
-  -l LINEAGES, --lineages LINEAGES	[Int] maximum number of demixing lineages (default: 100)
-
-#Sample Processing arguments for the [--input] sample handler:
-
-  -r MINRATE, --minrate MINRATE	[Int] filter mutation sites with mutation rate lower than setting threshold in sample vectors (default: 0)
-  
-  -m, --merge           [Flag] merge lineages with completely identical mutation sites in the barcode matrix
-  
-  -v, --vcfs            [Flag] parse *.vcf files under input folder
-  
-  -d MINDEPTH, --mindepth MINDEPTH	[Int] filter mutation sites with depth lower than setting threshold in *.vcf files (default: 0)
-  
-  -a ANN_FILE, --ann_file ANN_FILE	[File] specify a var_anno.tsv as input variation annotation table (default: ./var_anno.tsv)
-
-#Barcode Processing arguments for the barcode filter:
-
-  --barfilter2          [Flag] use another barcode filter (authored by Kun Yang) to handle barcode matrix
-  
-  --k_lineages K_LINEAGES	[Int] filter lineages with fewer than [Int] mutation sites (default: 200)
-  
-  --n_sites N_SITES     [Int] retain "key" mutation sites present in more than [Int] lineages (default: 20)
-
-#Middle file output arguments for middle processes:
-
-  --ann_outpath ANN_OUTPATH	[Dir] if not None, add save the annotated *.vcf table files under a folder (optional)
-  
-  --vcsample VCSAMPLE   [File] save the sample table file converted from *.vcf files (optional)
-  
-  --fsample FSAMPLE     [File] save the filtered sample table file (optional)
-  
-  --fbarcode FBARCODE   [File] save the filtered barcode matrix file (optional)
-  
-  --potentials POTENTIALS	[File] save potential sites not recorded in barcode but present in samples (optional)
-
-Example:
----------------
 1. Demix from input sample table file, and save result in result.tsv:
 ```sh
 python NextVpower.py -i PP_raw_example.tsv -o demix_result_example.tsv
@@ -111,6 +58,13 @@ python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --ann_out
 ```sh
 python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsample PP_raw_example.tsv --fbarcode MMFF_example.tsv --fsample PPFF_example.tsv
 ```
+
+Please see detailed usage by typing `python NextVpower.py -h` or in [source code](NextVpower.py)
+
+>Example data was published in Langjun Tang, Zhenyu Guo, Xiaoyi Lu, Junqiao Zhao, Yonghong Li, Kun Yang,
+Wastewater multiplex PCR amplicon sequencing revealed community transmission of SARS-CoV-2 lineages during the outbreak of infection in Chinese Mainland,
+*Heliyon*, Volume 10, Issue 15, 2024, e35332. DOI: [https://doi.org/10.1016/j.heliyon.2024.e35332](https://doi.org/10.1016/j.heliyon.2024.e35332)
+
 
 Publications
 ------------
