@@ -20,7 +20,7 @@ posAW(K0)=[];
 P(K0,:)=[];
 
 
-% Filter some ¡°old¡± lineages with fewer than 20 mutation sites 
+% Filter some Â¡Â°oldÂ¡Â± lineages with fewer than 20 mutation sites 
 % "20" is an adjustable parametersparameter   
 SUMAR=sum(A,2);
 M=find(SUMAR<=20);
@@ -52,7 +52,7 @@ A(:,ssA)=[];
 SiteA(ssA)=[];
 
 
-% Filter mutation sites not recorded in ¡°Barcode¡± matrix A 
+% Filter mutation sites not recorded in Â¡Â°BarcodeÂ¡Â± matrix A 
 % Repeated process,can be omitted,just for verification
 [isWA,posWA]=ismember(SiteA,SiteW);
 SSW=(1:size(SiteW));
