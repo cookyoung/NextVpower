@@ -24,6 +24,7 @@ pip install numpy pandas scipy
 cd /path/of/NextVPower
 ```
 4.Extract `usher_barcodes.zip` and `var_anno.zip` under current folder.
+Output files should be `usher_barcodes.csv` and `var_anno.csv`.
 ```sh
 unzip usher_barcodes.zip
 ```
@@ -34,6 +35,11 @@ unzip var_anno.tsv
 ```sh
 python NextVpower.py -h
 ```
+
+> [!NOTE]
+> `usher_barcodes.csv` was generated via [Freyja](https://github.com/andersen-lab/Freyja) and this file was copied from [Freyja repository](https://github.com/andersen-lab/Freyja/blob/main/freyja/data/usher_barcodes.csv).
+>
+> `var_anno.csv` was downloaded from [NGDC: RCoV19 - Variation Annotation](https://ngdc.cncb.ac.cn/ncov/variation/annotation) and I made some format convertion on it.
 
 Usage: 
 ---------------
@@ -72,5 +78,5 @@ This project was not published yet —— but you can still have a try on your S
 
 License
 -------
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
