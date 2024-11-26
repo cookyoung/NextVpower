@@ -13,20 +13,20 @@ def _getVpowerArgs():
     group1.add_argument('-i', "--input", type=str, help="[File/Dir] path of input sample table file or vcfs folder", required=True)
     group1.add_argument('-o', "--output", type=str, help="[File] path of output table file (default: ./demix_result.tsv)", default="demix_result.tsv")
     group1.add_argument('-b', "--barcode", type=str, help="[File] specify a usher_barcodes.csv as input barcode matrix (default: ./usher_barcodes.csv)", default="usher_barcodes.csv")
-    group1.add_argument('-l', "--lineages", type=int, help="[Int] maximum number of demixing lineages (default: 100)", default=100)
     # group1.add_argument("--solver_method", type=str, help="[Str] specify minimize method (default: \'SLSQP\', )", default='SLSQP')
     
     group2 = parser.add_argument_group("Sample Processing arguments for the [--input] sample handler")
-    group2.add_argument('-r', "--minrate", type=int, help="[Int] filter mutation sites with mutation rate lower than setting threshold in sample vectors (default: 0)", default=0)
-    group2.add_argument('-m', "--merge", action='store_true', help="[Flag] merge lineages with completely identical mutation sites in the barcode matrix")
     group2.add_argument('-v', "--vcfs", action='store_true', help="[Flag] parse *.vcf files under input folder")
-    group2.add_argument('-d', "--mindepth", type=int, help="[Int] filter mutation sites with depth lower than setting threshold in *.vcf files (default: 0)", default=0)
+    group2.add_argument('-r', "--minrate", type=float, help="[Float] filter mutation sites with mutation rate lower than setting threshold in sample vectors (default: 0.0)", default=0.0)
+    group2.add_argument('-d', "--mindepth", type=float, help="[Float] filter mutation sites with depth lower than setting threshold in *.vcf files (default: 0.0)", default=0.0)
     group2.add_argument('-a', "--ann_file", type=str, help="[File] specify a var_anno.tsv as input variation annotation table (default: ./var_anno.tsv)", default="var_anno.tsv")
     
     group3 = parser.add_argument_group("Barcode Processing arguments for the barcode filter")
-    group3.add_argument("--barfilter2", action='store_true', help="[Flag] use another barcode filter (authored by Kun Yang) to handle barcode matrix")
-    group3.add_argument("--k_lineages", type=int, help="[Int] filter lineages with fewer than [Int] mutation sites (default: 200)", default=200)
-    group3.add_argument("--n_sites", type=int, help="[Int] retain \"key\" mutation sites present in more than [Int] lineages (default: 20)", default=20)
+    group3.add_argument('-n', "--nsites", type=int, help="[Int] filter lineages with fewer than [Int] mutation sites (default: 20)", default=20)
+    group3.add_argument('-k', "--klineages", type=int, help="[Int] retain \"key\" mutation sites present in more than [Int] lineages (default: 200)", default=200)
+    group3.add_argument("--barfilter2", action='store_true', help="[Flag] use old barcode filter to handle barcode matrix")
+    group3.add_argument("--maxlineages", type=int, help="[barfilter only][Int] maximum number of demixing lineages (default: 100)", default=100)
+    group3.add_argument("--merge", action='store_true', help="[barfilter only][Flag] merge lineages with completely identical mutation sites in the barcode matrix")
     
     group4 = parser.add_argument_group("Middle file output arguments for middle processes")
     group4.add_argument("--ann_outpath", type=str, help="[Dir] if not None, add save the annotated *.vcf table files under a folder (optional)", default=None)
@@ -35,7 +35,7 @@ def _getVpowerArgs():
     group4.add_argument("--fbarcode", type=str, help="[File] save the filtered barcode matrix file (optional)", default=None)
     group4.add_argument("--potentials", type=str, help="[File] save potential sites not recorded in barcode but present in samples (optional)", default=None)
     
-    parser.add_argument('--version', action='version', version="NextVpower_v0.11")
+    parser.add_argument('--version', action='version', version="NextVpower_v0.12")
     return parser.parse_args()
 
 
@@ -129,7 +129,7 @@ def BackPasteAnno(vcf_df: pd.DataFrame, anno_df: pd.DataFrame, outname: str=None
         vcf_df.to_csv(outname, sep='\t')
     return vcf_df
 
-def FilterVcfDF(var_df: pd.DataFrame, min_depth=0, outname=None) -> pd.DataFrame:
+def FilterVcfDF(var_df: pd.DataFrame, min_depth=0.0, outname=None) -> pd.DataFrame:
     '''Filter mutation sites with low Depth in VCF DataFrame.
     '''
     if min_depth > 0:
@@ -166,7 +166,7 @@ def CollectSampleVar(var_df_dict: dict, outname=None) -> pd.DataFrame:
     return sp_df
 
 
-def FilterSPDF_by_rate(sp_df: pd.DataFrame, min_rate=0, outname=None) -> pd.DataFrame:
+def FilterSPDF_by_rate(sp_df: pd.DataFrame, min_rate=0.0, outname=None) -> pd.DataFrame:
     '''Filter mutation sites with low mutation rate in Sample DataFrame.
     '''
     if min_rate > 0:
@@ -181,7 +181,7 @@ def FilterSPDF_by_rate(sp_df: pd.DataFrame, min_rate=0, outname=None) -> pd.Data
         out_sp_df.to_csv(outname, sep='\t')
     return out_sp_df
 
-def FilterBarcode(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, lineage_num: int, remove_duplicates=True, outname=None) -> pd.DataFrame:
+def FilterBarcode_old(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, lineage_num: int, remove_duplicates=True, outname=None) -> pd.DataFrame:
     '''Filter Barcode DataFrame.
     '''
     #column: lineages, row: mutation sites
@@ -236,8 +236,8 @@ def FilterBarcode(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, lineage_num: in
         out_barcode_df.to_csv(outname, sep='\t')
     return out_barcode_df
 
-def FilterBarcode_new(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, key_lineage_num=200, min_sites=20, outname=None) -> pd.DataFrame:
-    '''Filter Barcode DataFrame. This barcode filter was authored by Kun Yang.
+def FilterBarcode(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, key_lineage_num=200, min_sites=20, outname=None) -> pd.DataFrame:
+    '''Filter Barcode DataFrame. This barcode filter was authored by Kun Yang and adapted by Zhenyu Guo.
     '''
     #column: lineages, row: mutation sites
     site_num = barcode_df.sum(axis=0)
@@ -368,9 +368,9 @@ if __name__ == "__main__":
     
     print("Handling barcode matrix and sample matrix...", end='')
     if params.barfilter2:
-        Barcode_df = FilterBarcode_new(readBarcode(params.barcode), SP_df_raw, key_lineage_num=params.k_lineages, min_sites=params.n_sites, outname=params.fbarcode)
+        Barcode_df = FilterBarcode_old(readBarcode(params.barcode), SP_df_raw, lineage_num=params.maxlineages, remove_duplicates=params.merge, outname=params.fbarcode)
     else:
-        Barcode_df = FilterBarcode(readBarcode(params.barcode), SP_df_raw, lineage_num=params.lineages, remove_duplicates=params.merge, outname=params.fbarcode)
+        Barcode_df = FilterBarcode(readBarcode(params.barcode), SP_df_raw, key_lineage_num=params.klineages, min_sites=params.nsites, outname=params.fbarcode)
     SP_df = FilterSPDF(Barcode_df, SP_df_raw, outname=params.fsample, outname_p=params.potentials)
     
     print("\nDemixing...", end=' ')

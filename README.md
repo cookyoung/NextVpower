@@ -1,7 +1,7 @@
 # NextVpower
-Next V-Power, adapted from "Virus Phylogenetic Resolver of Wastwater-based Epidemiology (V-Power).
+Next V-Power, adapted from "Virus Phylogenetic Resolver of Wastewater-based Epidemiology (V-Power).
 =======
-Next V-Power is a tool for SARS-CoV-2 lineage demixing via amplicon sequencing data.
+Next V-Power is a tool for SARS-CoV-2 lineage demixing from amplicon sequencing data, for wastewater or other mixed sample.
 
 Requirements:
 ---------------
@@ -15,13 +15,14 @@ This tool was developed on Windows, and tested on Linux.
 Installation:
 ---------------
 1.Clone this repository to your local directory. 
+
 2.Install requiments in a python environment. Skip if you have got these requirments.
 ```sh
 pip install numpy pandas scipy
 ```
 3.Change directory to where you cloned this repository to.
 ```sh
-cd /path/of/NextVPower
+cd /path/of/NextVpower
 ```
 4.Extract `usher_barcodes.zip` and `var_anno.zip` under current folder.
 Output files should be `usher_barcodes.csv` and `var_anno.csv`.
@@ -29,7 +30,7 @@ Output files should be `usher_barcodes.csv` and `var_anno.csv`.
 unzip usher_barcodes.zip
 ```
 ```sh
-unzip var_anno.tsv
+unzip var_anno.zip
 ```
 5.Run python command to check installation and see help.
 ```sh
@@ -41,20 +42,25 @@ python NextVpower.py -h
 >
 > `var_anno.csv` was downloaded from [NGDC: RCoV19 - Variation Annotation](https://ngdc.cncb.ac.cn/ncov/variation/annotation) and I made some format convertion on it.
 
+> [!NOTE]
+> `Vpower.m` and `Vpower2.m` are MATLAB scripts of V-Power.
+>
+> `NextVpower.py` is a standalone program, which has integrated the function of `Vpower.m` and `Vpower2.m` without using MATLAB engine.
+
 Usage: 
 ---------------
 
-1. Demix from input sample table file, and save result in result.tsv:
+1. Demix from input sample table file, and save result to result.tsv:
 ```sh
 python NextVpower.py -i PP_raw_example.tsv -o demix_result_example.tsv
 ```
-2. Demix from input *.vcf files under a folder, retain top 200 lineages, and save result in result.tsv:
+2. Demix from input *.vcf files under a folder, filter mutation sites with mutation rate lower than 0.1, filter mutation sites with depth lower than 10, and save result to result.tsv:
 ```sh
-python NextVpower.py -i vcf_example -v -l example -o demix_result_vcf_example_top200.tsv
+python NextVpower.py -i vcf_example -v -r 0.1 -d 10 -o demix_result_vcf_example.tsv
 ```
-3. Merge lineages with completely identical mutation sites when Demixing:
+3. Set barcode filter criteria, retain "key" mutation sites present in more than 30 lineages, filter lineages with fewer than 300 mutation sites:
 ```sh
-python NextVpower.py -i PP_raw_example.tsv -m -o demix_result_example_merged.tsv
+python NextVpower.py -i PP_raw_example.tsv -n 30 -k 300 -o demix_result_example_merged.tsv
 ```
 4. Add annotation to *.vcf files according to variation annotation table and demix:
 ```sh
@@ -62,15 +68,21 @@ python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --ann_out
 ```
 5. Demix from input *.vcf files under a folder, save result in result.tsv, and save middle data to files:
 ```sh
-python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsample PP_raw_example.tsv --fbarcode MMFF_example.tsv --fsample PPFF_example.tsv
+python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsample PP_raw_example.tsv --fbarcode MMFF_example.tsv --fsample PPFF_example.tsv --potentials potential_sites.tsv
 ```
 
-Please see detailed usage by typing `python NextVpower.py -h` or in [source code](NextVpower.py)
+Please see detailed usage by running `python NextVpower.py -h` or in [source code](NextVpower.py)
 
 >Example data was published in [Langjun Tang, Zhenyu Guo, Xiaoyi Lu, Junqiao Zhao, Yonghong Li, Kun Yang,
 Wastewater multiplex PCR amplicon sequencing revealed community transmission of SARS-CoV-2 lineages during the outbreak of infection in Chinese Mainland,
 *Heliyon*, Volume 10, Issue 15, 2024, e35332.](https://doi.org/10.1016/j.heliyon.2024.e35332)
 
+> [!TIP]
+> How to create VCF files?
+> 
+> - 1.Align sample.reads.fq to NC_045512_Hu-1.fasta (or MN908947.3.fasta) by running `bwa mem`, `samtools sort` and `samtools view`, to generate sample.bam.
+> 
+> - 2.Use variant calling tools (freebayes, bcftools, etc.) to generate sample.vcf from sample.bam.
 
 Publications
 ------------
