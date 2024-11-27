@@ -5,19 +5,15 @@
 clc
 clear
 
-tic                                           % Record the time consumption of data reading
-% [A,LA]=xlsread('MatrixA2024','A');                % Read the original "barcode" matrix A from the Excel file MatrixA
-% [num1,SiteA]=xlsread('MatrixA2024','Sites');      % Read the mutation sites vector
-% [P,SiteW]=xlsread('PFF2024','P');                % Read the mutation probability vectors P
-% [num2,Samples]=xlsread('PFF2024','Samples');     % Read all sample names
-A_table=dlmread('usher_barcodes.csv', ',', 0, 0);
-A=A_table(2:end,2:end);
-LA=A_table(2:end,1);
-SiteA=A_table(1,2:end)';
-P_table=dlmread('PP_raw_example.tsv', '\t', 0, 0);
-P=P_table(2:end,2:end);
-SiteW=P_table(2:end,1)';
-Samples=P_table(1,2:end);
+tic                                                 % Record the time consumption of data reading
+A_table=importdata('usher_barcodes.csv',',');       % Read the original "barcode" matrix A from 'usher_barcodes.csv'
+A=A_table.data;                                     % Get the mutation information of barcode
+LA=A_table.textdata(2:end,1);                       % Get all lineages names
+SiteA=A_table.textdata(1,2:end)';                   % Get the mutation sites of barcode
+P_table=importdata('PP_raw_example.tsv','\t');      % Read the mutation probability vectors P
+P=P_table.data;                                     % Get the mutation probability values of sample
+SiteW=P_table.textdata(2:end,1);                    % Get the mutation sites of samples
+Samples=P_table.textdata(1,2:end);                  % Get all sample names
 toc
 
 % Filter mutation sites which were detected in wastewater but not recorded in matrix A
@@ -39,7 +35,7 @@ posAW(K0)=[];
 P(K0,:)=[];
 
 
-% Filter some “old” lineages with fewer than 20 mutation sites 
+% Filter some "old" lineages with fewer than 20 mutation sites 
 % "20" is an adjustable parameters   
 SUMAR=sum(A,2);
 M=find(SUMAR<=20);
@@ -90,11 +86,12 @@ Aeq = ones(1, SA(1));
 beq = 1;
 LB = zeros(SA(1), 1);
 UB = ones(SA(1), 1);
+opts = optimoptions('fmincon','MaxFunctionEvaluations',300000,'MaxIterations',50000);
 
 tic
 for i = 1:SP(2)
     PP = P(:, i);
-    [X, fval] = fmincon(@Preva,X0,[],[],Aeq,beq,LB,UB,[],[],A',PP);
+    [X, fval] = fmincon(@Preva,X0,[],[],Aeq,beq,LB,UB,[],opts,A',PP);
     X_all(:, i) = X;
 end
 toc
@@ -104,21 +101,6 @@ AA=bar(X_all',0.4,'stacked');
 function f=Preva(X, MM, PP)
 f=sum(sum(abs(MM * X - PP)));
 end
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
 
 
 
