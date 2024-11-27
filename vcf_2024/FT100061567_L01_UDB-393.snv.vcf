@@ -1,0 +1,56 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##fileDate=20241112
+##source=freeBayes v1.3.2
+##reference=MN908947.3.fasta
+##contig=<ID=SPIKE-IN_CONTROL,length=48502>
+##contig=<ID=GAPDH,length=1377>
+##contig=<ID=MN908947.3,length=29903>
+##phasing=none
+##commandline="freebayes --haplotype-length 0 --pooled-continuous -m 20 -p 1 --strict-vcf -q 13 --min-coverage 10 -F 0.4 -f MN908947.3.fasta bamfile/FT100061567_L01_UDB-393.final.bam"
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total read depth at the locus">
+##INFO=<ID=RO,Number=1,Type=Integer,Description="Count of full observations of the reference haplotype.">
+##INFO=<ID=AO,Number=A,Type=Integer,Description="Count of full observations of this alternate haplotype.">
+##INFO=<ID=AB,Number=A,Type=Float,Description="Allele balance at heterozygous sites: a number between 0 and 1 representing the ratio of reads showing the reference allele to all reads, considering only reads from individuals called as heterozygous">
+##INFO=<ID=TYPE,Number=A,Type=String,Description="The type of allele, either snp, mnp, ins, del, or complex.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##bcftools_annotateVersion=1.10.2+htslib-1.10.2-3ubuntu0.1
+##bcftools_annotateCommand=annotate --remove ^INFO/TYPE,^INFO/DP,^INFO/RO,^INFO/AO,^INFO/AB,^FORMAT/GT; Date=Tue Nov 12 19:18:26 2024
+##bcftools_normVersion=1.10.2+htslib-1.10.2-3ubuntu0.1
+##bcftools_normCommand=norm -f MN908947.3.fasta -s -m +any -Ov; Date=Tue Nov 12 19:18:27 2024
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	unknown
+MN908947.3	241	.	C	T	9831.39	.	AB=0;AO=313;DP=314;RO=1;TYPE=snp	GT	1
+MN908947.3	405	.	A	G	13623.3	.	AB=0;AO=474;DP=474;RO=0;TYPE=snp	GT	1
+MN908947.3	670	.	T	G	17149.3	.	AB=0;AO=489;DP=490;RO=0;TYPE=snp	GT	1
+MN908947.3	968	.	G	A	0	.	AB=0;AO=44;DP=109;RO=65;TYPE=snp	GT	0
+MN908947.3	2334	.	C	T	3029.88	.	AB=0;AO=99;DP=99;RO=0;TYPE=snp	GT	1
+MN908947.3	2790	.	C	T	4038.38	.	AB=0;AO=137;DP=137;RO=0;TYPE=snp	GT	1
+MN908947.3	3037	.	C	T	4408.55	.	AB=0;AO=148;DP=148;RO=0;TYPE=snp	GT	1
+MN908947.3	4184	.	G	A	1661.63	.	AB=0;AO=54;DP=54;RO=0;TYPE=snp	GT	1
+MN908947.3	4321	.	C	T	2310.07	.	AB=0;AO=79;DP=80;RO=1;TYPE=snp	GT	1
+MN908947.3	5720	.	G	A	1961.99	.	AB=0;AO=64;DP=64;RO=0;TYPE=snp	GT	1
+MN908947.3	5833	.	C	T	3110.34	.	AB=0;AO=137;DP=159;RO=22;TYPE=snp	GT	1
+MN908947.3	9693	.	C	T	1824.05	.	AB=0;AO=70;DP=70;RO=0;TYPE=snp	GT	1
+MN908947.3	9866	.	C	T	3020.57	.	AB=0;AO=99;DP=99;RO=0;TYPE=snp	GT	1
+MN908947.3	10198	.	C	T	476.356	.	AB=0;AO=19;DP=19;RO=0;TYPE=snp	GT	1
+MN908947.3	10447	.	G	A	508.567	.	AB=0;AO=19;DP=19;RO=0;TYPE=snp	GT	1
+MN908947.3	10449	.	C	A	497.907	.	AB=0;AO=18;DP=18;RO=0;TYPE=snp	GT	1
+MN908947.3	11287	.	GTCTGGTTTT	G	4627.99	.	AB=0;AO=179;DP=179;RO=0;TYPE=del	GT	1
+MN908947.3	14140	.	G	T	321.178	.	AB=0;AO=49;DP=91;RO=42;TYPE=snp	GT	1
+MN908947.3	14408	.	C	T	541.217	.	AB=0;AO=18;DP=18;RO=0;TYPE=snp	GT	1
+MN908947.3	17859	.	T	C	629.492	.	AB=0;AO=22;DP=22;RO=0;TYPE=snp	GT	1
+MN908947.3	19955	.	C	T	614.74	.	AB=0;AO=25;DP=25;RO=0;TYPE=snp	GT	1
+MN908947.3	20055	.	A	G	396.443	.	AB=0;AO=12;DP=12;RO=0;TYPE=snp	GT	1
+MN908947.3	26060	.	C	T	3718.49	.	AB=0;AO=130;DP=130;RO=0;TYPE=snp	GT	1
+MN908947.3	26270	.	C	T	3554.01	.	AB=0;AO=119;DP=120;RO=1;TYPE=snp	GT	1
+MN908947.3	26275	.	A	G	2863.84	.	AB=0;AO=89;DP=89;RO=0;TYPE=snp	GT	1
+MN908947.3	27807	.	C	T	2570.9	.	AB=0;AO=92;DP=92;RO=0;TYPE=snp	GT	1
+MN908947.3	27915	.	G	T	880.876	.	AB=0;AO=30;DP=30;RO=0;TYPE=snp	GT	1
+MN908947.3	28271	.	A	T	10284.1	.	AB=0;AO=332;DP=333;RO=1;TYPE=snp	GT	1
+MN908947.3	28297	.	T	C	11335	.	AB=0;AO=348;DP=361;RO=13;TYPE=snp	GT	1
+MN908947.3	28311	.	C	T	8882.71	.	AB=0;AO=310;DP=326;RO=16;TYPE=snp	GT	1
+MN908947.3	28361	.	GGAGAACGCA	G	3591.26	.	AB=0;AO=178;DP=219;RO=40;TYPE=del	GT	1
+MN908947.3	28881	.	GGG	AAC	2289.6	.	AB=0;AO=87;DP=103;RO=12;TYPE=mnp	GT	1
+MN908947.3	28895	.	G	T	0	.	AB=0;AO=80;DP=175;RO=95;TYPE=snp	GT	0
+MN908947.3	29510	.	A	C	4190	.	AB=0;AO=126;DP=127;RO=0;TYPE=snp	GT	1
+MN908947.3	29625	.	C	T	3753.72	.	AB=0;AO=122;DP=122;RO=0;TYPE=snp	GT	1

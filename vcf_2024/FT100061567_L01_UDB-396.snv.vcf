@@ -1,0 +1,56 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##fileDate=20241112
+##source=freeBayes v1.3.2
+##reference=MN908947.3.fasta
+##contig=<ID=SPIKE-IN_CONTROL,length=48502>
+##contig=<ID=GAPDH,length=1377>
+##contig=<ID=MN908947.3,length=29903>
+##phasing=none
+##commandline="freebayes --haplotype-length 0 --pooled-continuous -m 20 -p 1 --strict-vcf -q 13 --min-coverage 10 -F 0.4 -f MN908947.3.fasta bamfile/FT100061567_L01_UDB-396.final.bam"
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total read depth at the locus">
+##INFO=<ID=RO,Number=1,Type=Integer,Description="Count of full observations of the reference haplotype.">
+##INFO=<ID=AO,Number=A,Type=Integer,Description="Count of full observations of this alternate haplotype.">
+##INFO=<ID=AB,Number=A,Type=Float,Description="Allele balance at heterozygous sites: a number between 0 and 1 representing the ratio of reads showing the reference allele to all reads, considering only reads from individuals called as heterozygous">
+##INFO=<ID=TYPE,Number=A,Type=String,Description="The type of allele, either snp, mnp, ins, del, or complex.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##bcftools_annotateVersion=1.10.2+htslib-1.10.2-3ubuntu0.1
+##bcftools_annotateCommand=annotate --remove ^INFO/TYPE,^INFO/DP,^INFO/RO,^INFO/AO,^INFO/AB,^FORMAT/GT; Date=Tue Nov 12 19:18:27 2024
+##bcftools_normVersion=1.10.2+htslib-1.10.2-3ubuntu0.1
+##bcftools_normCommand=norm -f MN908947.3.fasta -s -m +any -Ov; Date=Tue Nov 12 19:18:27 2024
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	unknown
+MN908947.3	241	.	C	T	496.864	.	AB=0;AO=18;DP=19;RO=1;TYPE=snp	GT	1
+MN908947.3	405	.	A	G	846.41	.	AB=0;AO=26;DP=26;RO=0;TYPE=snp	GT	1
+MN908947.3	5720	.	G	A	1401.51	.	AB=0;AO=46;DP=46;RO=0;TYPE=snp	GT	1
+MN908947.3	7083	.	C	T	6983.85	.	AB=0;AO=242;DP=254;RO=10;TYPE=snp	GT	1
+MN908947.3	7241	.	G	T	5.14999e-11	.	AB=0;AO=6;DP=14;RO=8;TYPE=snp	GT	0
+MN908947.3	9344	.	C	T	15780.3	.	AB=0;AO=559;DP=565;RO=6;TYPE=snp	GT	1
+MN908947.3	9424	.	A	G	439.917	.	AB=0;AO=13;DP=13;RO=0;TYPE=snp	GT	1
+MN908947.3	9534	.	C	T	2277.05	.	AB=0;AO=77;DP=77;RO=0;TYPE=snp	GT	1
+MN908947.3	9693	.	C	T	915.175	.	AB=0;AO=33;DP=33;RO=0;TYPE=snp	GT	1
+MN908947.3	9866	.	C	T	1157.03	.	AB=0;AO=41;DP=41;RO=0;TYPE=snp	GT	1
+MN908947.3	10029	.	C	T	4060.27	.	AB=0;AO=163;DP=164;RO=1;TYPE=snp	GT	1
+MN908947.3	10039	.	C	T	4381.99	.	AB=0;AO=174;DP=175;RO=0;TYPE=snp	GT	1
+MN908947.3	10198	.	C	T	4293.05	.	AB=0;AO=138;DP=138;RO=0;TYPE=snp	GT	1
+MN908947.3	10447	.	G	A	649.943	.	AB=0;AO=23;DP=23;RO=0;TYPE=snp	GT	1
+MN908947.3	10449	.	C	A	650.837	.	AB=0;AO=23;DP=23;RO=0;TYPE=snp	GT	1
+MN908947.3	11287	.	GTCTGGTTTT	G	406.556	.	AB=0;AO=20;DP=20;RO=0;TYPE=del	GT	1
+MN908947.3	17222	.	A	G	1.26292e-08	.	AB=0;AO=12;DP=28;RO=16;TYPE=snp	GT	0
+MN908947.3	17410	.	C	T	3177.95	.	AB=0;AO=110;DP=110;RO=0;TYPE=snp	GT	1
+MN908947.3	17859	.	T	C	1621.55	.	AB=0;AO=63;DP=63;RO=0;TYPE=snp	GT	1
+MN908947.3	25000	.	C	T	294.084	.	AB=0;AO=10;DP=10;RO=0;TYPE=snp	GT	1
+MN908947.3	25690	.	G	C	4645.11	.	AB=0;AO=179;DP=179;RO=0;TYPE=snp	GT	1
+MN908947.3	26060	.	C	T	1883.23	.	AB=0;AO=69;DP=69;RO=0;TYPE=snp	GT	1
+MN908947.3	26270	.	C	T	5254.46	.	AB=0;AO=174;DP=174;RO=0;TYPE=snp	GT	1
+MN908947.3	26275	.	A	G	3684.02	.	AB=0;AO=113;DP=113;RO=0;TYPE=snp	GT	1
+MN908947.3	26313	.	C	T	3282.99	.	AB=0;AO=112;DP=112;RO=0;TYPE=snp	GT	1
+MN908947.3	26577	.	C	G	1689.21	.	AB=0;AO=55;DP=55;RO=0;TYPE=snp	GT	1
+MN908947.3	26709	.	G	A	1127.43	.	AB=0;AO=39;DP=39;RO=0;TYPE=snp	GT	1
+MN908947.3	26858	.	C	T	480.911	.	AB=0;AO=19;DP=19;RO=0;TYPE=snp	GT	1
+MN908947.3	27807	.	C	T	1755.76	.	AB=0;AO=67;DP=67;RO=0;TYPE=snp	GT	1
+MN908947.3	27915	.	G	T	1011.46	.	AB=0;AO=33;DP=33;RO=0;TYPE=snp	GT	1
+MN908947.3	28772	.	T	A	5.06295e-15	.	AB=0;AO=10;DP=25;RO=15;TYPE=snp	GT	0
+MN908947.3	29510	.	A	C	11229.6	.	AB=0;AO=363;DP=363;RO=0;TYPE=snp	GT	1
+MN908947.3	29555	.	C	T	6069.51	.	AB=0;AO=194;DP=194;RO=0;TYPE=snp	GT	1
+MN908947.3	29625	.	C	T	7464.81	.	AB=0;AO=246;DP=248;RO=2;TYPE=snp	GT	1
+MN908947.3	29733	.	CGAGGCCACGCGGAGTACGATCGAGTG	C	191.941	.	AB=0;AO=8;DP=8;RO=0;TYPE=del	GT	1
