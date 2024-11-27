@@ -74,7 +74,7 @@ python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --ann_out
 ```
 5. Demix from input *.vcf files under a folder, save result in result.tsv, and save middle data to files:
 ```sh
-python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsample PP_raw_example.tsv --fbarcode MMFF_example.tsv --fsample PPFF_example.tsv --potentials potential_sites.tsv
+python NextVpower.py -i vcf_example -v -o demix_result_vcf_example.tsv --vcsample PP_raw_example.tsv --fbarcode MMFF_example.tsv --fsample PPFF_example.tsv --potentials potential_sites_example.tsv
 ```
 
 Please see detailed usage by running `python NextVpower.py -h` or in [source code](NextVpower.py)
