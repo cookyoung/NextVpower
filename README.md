@@ -3,6 +3,11 @@ Next V-Power, adapted from "Virus Phylogenetic Resolver of Wastewater-based Epid
 =======
 Next V-Power is a tool for SARS-CoV-2 lineage demixing from amplicon sequencing data, for wastewater or other mixed sample.
 
+Basic flow sheet:
+---------------
+![image](https://github.com/user-attachments/assets/e5a036dd-a575-4ba2-a6ee-0eec6af2b6c3)
+Note: Read numbers indicate adjustable parameters. Green numbers may change according to your sequencing data and the updating of the barcode matrix A.
+
 Requirements:
 ---------------
  - python3
