@@ -4,7 +4,8 @@
 import os
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize, LinearConstraint
+import cvxpy as cp
+# from scipy.optimize import minimize, LinearConstraint
 import argparse
 
 def _getVpowerArgs():
@@ -14,7 +15,6 @@ def _getVpowerArgs():
     group1.add_argument('-o', "--output", type=str, help="[File] path of output table file (default: ./demix_result.tsv)", default="demix_result.tsv")
     group1.add_argument('-b', "--barcode", type=str, help="[File] specify a usher_barcodes.csv as input barcode matrix (default: ./usher_barcodes.csv)", default="usher_barcodes.csv")
     group1.add_argument('-l', "--maxlineages", type=int, help="[Int] maximum number of demixing lineages (default: 100)", default=100)
-    # group1.add_argument("--solver_method", type=str, help="[Str] specify minimize method (default: \'SLSQP\', )", default='SLSQP')
     
     group2 = parser.add_argument_group("Sample Processing arguments for the [--input] sample handler")
     group2.add_argument('-v', "--vcfs", action='store_true', help="[Flag] parse *.vcf files under input folder")
@@ -58,6 +58,7 @@ def collectFile(path: str, isfolder=False, ftype='vcf', fullpath=False) -> list:
                     collect_list.append(file_name)
                 else:
                     collect_list.append(full_pathname)
+    collect_list = sorted(collect_list)
     return collect_list
 
 def readBarcode(fname: str) -> pd.DataFrame:
@@ -283,7 +284,7 @@ def FilterSPDF(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, outname=None, outn
     return out_sp_df
 
 
-def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_num=100, method='SLSQP', tol=1e-8, maxiter=50000) -> pd.DataFrame:
+def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_num=100):
     '''Demixing via minimize solver.
     '''
     mutation_matrix = barcode_df.to_numpy()
@@ -292,27 +293,57 @@ def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_nu
     lineage_num = np.size(mutation_matrix, 1)
     sample_num = np.size(sp_var_matrix, 1)
     result_all = np.zeros((lineage_num, sample_num))
+    
     for sample_idx in range(sample_num):
-        start_point = (np.array([1 for i in range(lineage_num)]).T / lineage_num)
-        arguments = (mutation_matrix, sp_var_matrix[:, sample_idx])
-        # jac: None; hess, hessp: None
-        bounds = [(0, 1) for i in range(lineage_num)]
-        Aeq = np.array([1 for i in range(lineage_num)])
-        beq = 1
-        constraints = LinearConstraint(Aeq, beq, beq)
-        options = {'maxiter': maxiter, 'disp': False}
-        res = minimize(fun=Preva, x0=start_point, args=arguments, method=method, bounds=bounds, constraints=constraints, tol=tol, options=options)
-        if res.success:
-            result_all[:, sample_idx] = res.x
+        x = cp.Variable(mutation_matrix.shape[1])
+        cost = cp.norm(mutation_matrix @ x - sp_var_matrix[:, sample_idx], 1)
+        constraints = [sum(x) == 1, x >= 0]
+        prob = cp.Problem(cp.Minimize(cost), constraints)
+        solver_ = cp.CLARABEL
+        
+        try:
+            prob.solve(verbose=False, solver=solver_)
+        except cp.error.SolverError:
+            raise ValueError("Failed, most likely due to low sequencing coverage.")
+        else:
+            result_all[:, sample_idx] = x.value
+    
     lineage_name_index = barcode_df.columns[:lineage_num]
     out_df = pd.DataFrame(result_all, index=lineage_name_index, columns=sample_df.columns)
     out_df['sum'] = out_df.sum(axis=1)
     out_df.sort_values(by='sum', ascending=False, inplace=True)
     return out_df
 
-def Preva(X, *args):
-    mm, pp = args
-    return sum(abs(mm.dot(X) - pp))
+# def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_num=100, method='SLSQP', tol=1e-8, maxiter=50000) -> pd.DataFrame:
+#     '''Demixing via minimize solver.
+#     '''
+#     mutation_matrix = barcode_df.to_numpy()
+#     sp_var_matrix = sample_df.to_numpy()
+#     mutation_matrix = mutation_matrix[:, 0: max_lineage_num]
+#     lineage_num = np.size(mutation_matrix, 1)
+#     sample_num = np.size(sp_var_matrix, 1)
+#     result_all = np.zeros((lineage_num, sample_num))
+#     for sample_idx in range(sample_num):
+#         start_point = (np.array([1 for i in range(lineage_num)]).T / lineage_num)
+#         arguments = (mutation_matrix, sp_var_matrix[:, sample_idx])
+#         # jac: None; hess, hessp: None
+#         bounds = [(0, 1) for i in range(lineage_num)]
+#         Aeq = np.array([1 for i in range(lineage_num)])
+#         beq = 1
+#         constraints = LinearConstraint(Aeq, beq, beq)
+#         options = {'maxiter': maxiter, 'disp': False}
+#         res = minimize(fun=Preva, x0=start_point, args=arguments, method=method, bounds=bounds, constraints=constraints, tol=tol, options=options)
+#         if res.success:
+#             result_all[:, sample_idx] = res.x
+#     lineage_name_index = barcode_df.columns[:lineage_num]
+#     out_df = pd.DataFrame(result_all, index=lineage_name_index, columns=sample_df.columns)
+#     out_df['sum'] = out_df.sum(axis=1)
+#     out_df.sort_values(by='sum', ascending=False, inplace=True)
+#     return out_df
+
+# def Preva(X, *args):
+#     mm, pp = args
+#     return sum(abs(mm.dot(X) - pp))
 
 
 ###tools: Handle raw AnnoDF
@@ -374,9 +405,7 @@ if __name__ == "__main__":
     SP_df = FilterSPDF(Barcode_df, SP_df_raw, outname=params.fsample, outname_p=params.potentials)
     
     print("\nDemixing...", end=' ')
-    Out_DF = SolveDemix(SP_df, Barcode_df, max_lineage_num=params.maxlineages) #, method=params.solver_method
-    #https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.minimize
-    #tol, max_iter were not set
+    Out_DF = SolveDemix(SP_df, Barcode_df, max_lineage_num=params.maxlineages)
     
     Out_DF.to_csv(params.output, sep='\t')
     print("Done.")
