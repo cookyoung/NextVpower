@@ -14,7 +14,7 @@ Requirements:
  - python3
  - numpy
  - pandas
- - scipy
+ - cvxpy
 
 This tool was developed on Windows, and tested on Linux.
 
@@ -24,7 +24,7 @@ Installation:
 
 2.Install requiments in a python environment. Skip if you have got these requirments.
 ```sh
-pip install numpy pandas scipy
+pip install numpy pandas cvxpy
 ```
 3.Change directory to where you cloned this repository to.
 ```sh
@@ -64,7 +64,7 @@ python NextVpower.py -i PP_raw_example.tsv -o demix_result_example.tsv
 ```sh
 python NextVpower.py -i vcf_example -v -r 0.1 -d 10 -o demix_result_vcf_example.tsv
 ```
-3. Set barcode filter criteria, retain "key" mutation sites present in more than 300 lineages, filter lineages with fewer than 30 mutation sites:
+3. Set barcode filter criteria, retain "key" mutation sites present in more than 300 lineages (default 200), filter lineages with fewer than 30 (default 20) mutation sites:
 ```sh
 python NextVpower.py -i PP_raw_example.tsv -n 30 -k 300 -o demix_result_example_merged.tsv
 ```
