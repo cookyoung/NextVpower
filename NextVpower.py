@@ -284,7 +284,7 @@ def FilterSPDF(barcode_df: pd.DataFrame, sp_df: pd.DataFrame, outname=None, outn
     return out_sp_df
 
 
-def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_num=100):
+def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_num=100, min_result=0.0):
     '''Demixing via minimize solver.
     '''
     mutation_matrix = barcode_df.to_numpy()
@@ -295,19 +295,22 @@ def SolveDemix(sample_df: pd.DataFrame, barcode_df: pd.DataFrame, max_lineage_nu
     result_all = np.zeros((lineage_num, sample_num))
     
     for sample_idx in range(sample_num):
+        sample_name = sample_df.columns[sample_idx]
         x = cp.Variable(mutation_matrix.shape[1])
         cost = cp.norm(mutation_matrix @ x - sp_var_matrix[:, sample_idx], 1)
         constraints = [sum(x) == 1, x >= 0]
         prob = cp.Problem(cp.Minimize(cost), constraints)
-        solver_ = cp.CLARABEL
+        solver = cp.CLARABEL
         
         try:
-            prob.solve(verbose=False, solver=solver_)
+            prob.solve(verbose=False, solver=solver)
         except cp.error.SolverError:
-            raise ValueError("Failed, most likely due to low sequencing coverage.")
+            print("Failed to demix sammle '{}', most likely due to low sequencing coverage.".format(sample_name))
+            # raise ValueError("Failed to demix sammle '{}', most likely due to low sequencing coverage.".format(sample_name))
         else:
             result_all[:, sample_idx] = x.value
     
+    result_all[result_all < min_result] = 0
     lineage_name_index = barcode_df.columns[:lineage_num]
     out_df = pd.DataFrame(result_all, index=lineage_name_index, columns=sample_df.columns)
     out_df['sum'] = out_df.sum(axis=1)
