@@ -66,7 +66,7 @@ python NextVpower.py -i vcf_example -v -r 0.1 -d 10 -o demix_result_vcf_example.
 ```
 3. Set barcode filter criteria, retain "key" mutation sites present in more than 300 lineages (default 200), filter lineages with fewer than 30 mutation sites (default 20):
 ```sh
-python NextVpower.py -i PP_raw_example.tsv -n 30 -k 300 -o demix_result_example_merged.tsv
+python NextVpower.py -i PP_raw_example.tsv -n 30 -k 300 -o demix_result_example_300_30.tsv
 ```
 4. Add annotation to *.vcf files according to variation annotation table and demix:
 ```sh
