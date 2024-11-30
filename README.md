@@ -5,7 +5,8 @@ Next V-Power is a tool for SARS-CoV-2 lineage demixing from amplicon sequencing 
 
 Basic flow sheet:
 ---------------
-![image](https://github.com/user-attachments/assets/e5a036dd-a575-4ba2-a6ee-0eec6af2b6c3)
+![image](https://github.com/user-attachments/assets/8471c6cc-c55c-4156-81a8-8c379aaa2b2e)
+
 Note: Read numbers indicate adjustable parameters. Green numbers may change according to your sequencing data and the updating of the barcode matrix A.
 
 
