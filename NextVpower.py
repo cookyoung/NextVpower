@@ -89,7 +89,7 @@ def convertVcf2DF(vcfname: str) -> pd.DataFrame:
         if line[0] != '#':
             line_compo = line[:-1].split('\t')
             if len(line_compo) != 0:
-                pos = line_compo[1]
+                pos_str = line_compo[1]
                 ref = line_compo[3]
                 alt_ls = line_compo[4].split(',')
                 info_list = line_compo[7].split(';')
@@ -101,19 +101,33 @@ def convertVcf2DF(vcfname: str) -> pd.DataFrame:
                 for alt, ao_str, typ in zip(alt_ls, ao_ls, typ_ls):
                     ao = eval(ao_str)
                     maf = ao / (ao + ro) * 100
-                    ##fix an issue: convert MNP to mutiple SNPs
+                    
                     if typ == 'mnp' or typ == 'complex':
-                        for i in range(len(ref)):
+                        ref_alt_len = min(len(ref), len(alt))
+                        for i in range(ref_alt_len):
                             s_ref = ref[i]
                             s_alt = alt[i]
-                            s_pos = str(eval(pos) + i)
+                            s_pos = str(eval(pos_str) + i)
                             s_base_change = s_ref + s_pos + s_alt
                             s_depth = "{}:{} {}:{}".format(s_alt, ao, s_ref, ro)
                             df.loc[s_base_change] = pd.Series({"Position": s_pos, "Type": typ, "REF Base": s_ref, "ALT Base": s_alt, "Depth": s_depth, "MAF": maf})
+                    ##fix an issue: convert mutiple INDEL to single INDEL
+                    elif typ == 'del':
+                        alt_len = len(alt)
+                        if alt_len > 1:
+                            alt = alt[-1]
+                            ref = ref[alt_len-1:]
+                            pos_str = str(eval(pos_str) + alt_len - 1)
+                    elif typ == 'ins':
+                        ref_len = len(ref)
+                        if ref_len > 1:
+                            ref = ref[-1]
+                            alt = alt[ref_len-1:]
+                            pos_str = str(eval(pos_str) + ref_len - 1)
                     else:
-                        base_change = ref + pos + alt
+                        base_change = ref + pos_str + alt
                         depth = "{}:{} {}:{}".format(alt, ao, ref, ro)
-                        df.loc[base_change] = pd.Series({"Position": pos, "Type": typ, "REF Base": ref, "ALT Base": alt, "Depth": depth, "MAF": maf})
+                        df.loc[base_change] = pd.Series({"Position": pos_str, "Type": typ, "REF Base": ref, "ALT Base": alt, "Depth": depth, "MAF": maf})
     df["MAF"] = df["MAF"].astype("float64") #change dtype of column in pd.DataFrame
     return df
 
