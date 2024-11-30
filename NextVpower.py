@@ -102,7 +102,7 @@ def convertVcf2DF(vcfname: str) -> pd.DataFrame:
                     ao = eval(ao_str)
                     maf = ao / (ao + ro) * 100
                     ##fix an issue: convert MNP to mutiple SNPs
-                    if typ == 'mnp':
+                    if typ == 'mnp' or 'complex':
                         for i in range(len(ref)):
                             s_ref = ref[i]
                             s_alt = alt[i]
