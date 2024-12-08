@@ -23,22 +23,25 @@ Installation:
 ---------------
 1.Clone this repository to your local directory. 
 
-2.Install requiments in a python environment. Skip if you have got these requirments.
+2.Install requiments in a python environment. Skip if you have reached these requirments.
 ```sh
 pip install numpy pandas cvxpy
 ```
 3.Change directory to where you cloned this repository to.
 ```sh
-cd /path/of/NextVpower
+cd /path/of/NextVpower #example path
 ```
-4.Extract `usher_barcodes.zip` and `var_anno.zip` under current folder.
-Output files should be `usher_barcodes.csv` and `var_anno.csv`.
+4.Unzip `usher_barcodes.zip` and `var_anno.zip` under current directory.
+Output files should be `usher_barcodes.csv` and `var_anno.csv`. 
+Using unpacking software may be more convenient. 
 ```sh
 unzip usher_barcodes.zip
 ```
 ```sh
 unzip var_anno.zip
 ```
+ - For Windows, please unzip these two files to the folder where they are located.
+
 5.Run python command to check installation and see help.
 ```sh
 python NextVpower.py -h
