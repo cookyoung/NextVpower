@@ -1,7 +1,7 @@
 # NextVpower
 Next V-Power, adapted from "Virus Phylogenetic Resolver of Wastewater-based Epidemiology (V-Power).
 =======
-Next V-Power is a tool for SARS-CoV-2 lineage demixing from amplicon sequencing data, for wastewater or other mixed sample.
+Next V-Power is a tool for SARS-CoV-2 lineage demixing from multiplex sequencing data, for wastewater and other mixed samples.
 
 Basic flow sheet:
 ---------------
